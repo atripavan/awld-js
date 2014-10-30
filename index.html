@@ -2,15 +2,13 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta name="description" content="Awld.js : A javascript library for Ancient World Linked Data." />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="atripavan_awld.js : A javascript library for Ancient World Linked Data.">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Awld.js</title>
-    <script src="lib/requirejs/require.min.js" type="text/javascript"></script>
-    <script src="awld.js?autoinit" type="text/javascript"></script>
-
+    <title>atripavan_awld.js</title>
   </head>
 
   <body>
@@ -18,14 +16,14 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/isawnyu/awld-js">View on GitHub</a>
+          <a id="forkme_banner" href="https://github.com/atripavan/awld-js">View on GitHub</a>
 
-          <h1 id="project_title">Awld.js</h1>
+          <h1 id="project_title">atripavan_awld.js</h1>
           <h2 id="project_tagline">A javascript library for Ancient World Linked Data.</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/isawnyu/awld-js/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/isawnyu/awld-js/tarball/master">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="https://github.com/atripavan/awld-js/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/atripavan/awld-js/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -33,53 +31,24 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>Awld.js is a javascript library for Ancient World Linked Data. When installed on an existing web page, it will add functionality and visual elements based on links to stable URIs relevant to the study of the Ancient World. View the source of this page for the two 'script' elements you can add to your pages to get it working.</p>
+        <p>Awld.js is a javascript library for Ancient World Linked Data. Dropped into an existing web page, it will add functionality and visual elements based on links to stable URIs relevant to the study of the Ancient World.</p>
 
-<h2>Awld.js in Action</h2>
-<p>There is a <a href="awld-test.html">test page.</a></p>
+<h2>
+<a name="this-is-a-test" class="anchor" href="#this-is-a-test"><span class="octicon octicon-link"></span></a>This is a test</h2>
 
-Click-through on any of these links to see awld.js installed on third-party sites.
-<ul>
-<li><a href="http://www.ancientmarbles.org/wiki/Giallo_Antico">Giallo Antico</a> at ancientmarbles.org. Hover over Pleiades ID in 'Origin' section.</li>
-<li><a href="http://nomisma.org/id/igch2122">Coin Hoard</a> from Nomisma.org. Click-through and hover over links to 'ANS' coins to see images.</li>
-<li><a href="http://opencontext.org/subjects/8BD299F6-429B-442C-B31E-8C8489E9B4A9">Coin</a> from Domuztepe in Turkey as hosted by OpenContext. Click-through and hover over the link to "Antiochia/Theoupolis".</li>
-<li>Pelagios is collecting references to ancient sites. <a href="http://pelagios.dme.ait.ac.at/api/datasets/739128af1e9613de03706a57cef46976/annotations">This list</a> of references to sites in OpenContext uses awld.js to show previews of each object.</li>
-<li>The <a href="http://ancientworldonline.blogspot.com/">blog</a> has installed the library. Look at the end of the post "<a href="http://ancientworldonline.blogspot.com/2012/05/open-access-journal-histria-antiqua.html">Open Access Journal: Histria antiqua</a>" for a link to the Pleiades page for "Histria".</li>
-</ul>
+<p>This is a test site for the Awld.js library. <a href="awld-js/test/pages/test.html">You probably want to check out the test page.</a></p>
 
-<h2>Recognized URIs</h2>
-<p>Hovering over any of the links below will show a "popup" with information drawn from the linked web page.</p>
-<table class="awld-scope">
-<tr><td>Articles in Wikipedia: <br /><a href="http://wikipedia.org/wiki/African_red_slip">http://wikipedia.org/wiki/African_red_slip</a></td></tr>
-<tr><td>Entries in the database of the Portable Antiquities Scheme: <br /><a href="http://finds.org.uk/database/artefacts/record/id/495315">http://finds.org.uk/database/artefacts/record/id/495315</a></td></tr>
-<tr><td>Entries in the Encyclopedia of Life: <br /><a href="http://eol.org/pages/328699">http://eol.org/pages/328699</a></td></tr>
-<tr><td>Historical people defined by the Perseus Digital Library: <br /><a href="http://data.perseus.org/people/smith:alexander-3">http://data.perseus.org/people/smith:alexander-3</a></td></tr>
-<tr><td>Identifiers for numismatic concepts from nomisma.org: <br /><a href="http://nomisma.org/id/athens">http://nomisma.org/id/athens</a>, <br /><a href="http://nomisma.org/id/igch2122">http://nomisma.org/id/igch2122</a></td></tr>
-<tr><td>Library of Congress Catalog records: <br /><a href="http://lccn.loc.gov/a55003923">http://lccn.loc.gov/a55003923</a></td></tr>
-<tr><td>Place entries in the Geonames gazetteer: <br /><a href="http://www.geonames.org/4074288/moontown-airport.html">http://www.geonames.org/4074288/moontown-airport.html</a></td></tr>
-<tr><td>Place entries in the Pleiades gazetteer: <br /><a href="http://pleiades.stoa.org/places/520998">http://pleiades.stoa.org/places/520998</a></td></tr>
-<tr><td>Records in the catalog of the American Numismatic Society: <br /><a href="http://numismatics.org/collection/1937.158.409">http://numismatics.org/collection/1937.158.409</a></td></tr>
-<tr><td>Records in the catalog of the Staatliche Museen zu Berlin: <br /><a href="http://www.smb.museum/ikmk/object.php?id=18207683">http://www.smb.museum/ikmk/object.php?id=18207683</a></td></tr>
-<tr><td>Records in the catalog of the Système Universitaire de Documentation: <br /><a href="http://www.sudoc.fr/160739993">http://www.sudoc.fr/160739993</a></td></tr>
-<tr><td>Records in the German Archaeological Institute's Arachne database: <br /><a href="http://arachne.uni-koeln.de/item/objekt/1460">http://arachne.uni-koeln.de/item/objekt/1460</a></td></tr>
-<tr><td>Records in the OpenContext archaeological database: <br /><a href="http://opencontext.org/subjects/73221A18-7A7C-44C4-36CD-0CECF8F7A725">http://opencontext.org/subjects/73221A18-7A7C-44C4-36CD-0CECF8F7A725</a></td></tr>
-<tr><td>Records in the papyri.info system: <br /><a href="http://www.papyri.info/hgv/1357">http://www.papyri.info/hgv/1357</a></td></tr>
-<tr><td>Texts held in the Perseus Digital Library: <br /><a href="http://data.perseus.org/citations/urn:cts:greekLang:tlg0012.tlg001.perseus-eng1">http://data.perseus.org/citations/urn:cts:greekLang:tlg0012.tlg001.perseus-eng1</a></td></tr>
-<tr><td>Textual records in Trismegistos.org: <br /><a href="http://www.trismegistos.org/text/13">http://www.trismegistos.org/text/13</a></td></tr>
-<tr><td>Yale University Art Gallery Ecatalogue: <br /><a href="http://ecatalogue.art.yale.edu/detail.htm?objectId=139601">http://ecatalogue.art.yale.edu/detail.htm?objectId=139601</a></td></tr>
-</table>
+<h2>
+<a name="who" class="anchor" href="#who"><span class="octicon octicon-link"></span></a>Who</h2>
 
-
-<h2></h2>
-
-<p>Awld.js is a project of the <a href="http://isaw.nyu.edu/">Institute for the Study of the Ancient World at New York University</a> overseen by <a href="http://isaw.nyu.edu/people/faculty/sebastian-heath">Sebastian Heath</a>. It is licensed under the BSD License; see LICENSE.txt for more infomation.</p>
+<p>Awld.js is a project of the Institute for the Study of the Ancient World at New York University. It is licensed under the BSD License; see LICENSE.txt for more infomation.</p>
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Initial development of Awld.js by <a href="https://github.com/nrabinowitz">Nick Rabinowitz</a></p>
+        <p class="copyright">atripavan_awld.js maintained by <a href="https://github.com/atripavan">atripavan</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
