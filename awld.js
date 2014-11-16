@@ -188,8 +188,9 @@ if (typeof DEBUG === 'undefined') {
             baseUrl: awld.baseUrl,
             paths: paths 
         });
-        
+        		
         // load registry and initialize modules
+        // require(['jquery', 'registry', 'ui', 'types', 'extmodule'], function($, registry, ui, types, extmodule) {
         require(['jquery', 'registry', 'ui', 'types'], function($, registry, ui, types) {
         
             // add any additional modules
@@ -312,6 +313,8 @@ if (typeof DEBUG === 'undefined') {
                     init: function() {
                         var module = this,
                             resources = module.resources = [];
+							console.log('resources');
+							console.log(resources);
                         // create Resource for each unique URI
                         module.resourceMap = module.$refs.toArray()
                             .reduce(function(agg, el) {
@@ -389,32 +392,47 @@ if (typeof DEBUG === 'undefined') {
             
                 // constrain scope based on markup
                 var scopeSelector = '.awld-scope';
-                if (!scope && $(scopeSelector).length)
+                if (!scope && $(scopeSelector).length){
                     scope = scopeSelector;
-            
+					// alert(scope);
+				}
+                // Scope for external module links(zotero)
+                var extScopeSelector = '.ext-mod-scope';
+                if (!extScope && $(extScopeSelector).length){
+                    extScope = extScopeSelector;
+				}
                 // look for modules to initialize
                 $.each(registry, function(uriBase, moduleName) {
                     // look for links with this URI base
-                    var $refs = $('a[href^="' + uriBase + '"]', scope),
-                        path = moduleName.indexOf('http') === 0 ? moduleName : modulePath + moduleName;
-                    if ($refs.length) {
-                        if (DEBUG) console.log('Found links for module: ' + moduleName);
-                        target++;
-                        // load module
-                        require([path], function(module) {
-                            // initialize with cached references
-                            module.$refs = $refs;
-                            module.moduleName = moduleName;
-                            module = Module(module);
-                            module.init();
-                            // update manager
-                            loadMgr(moduleName, module);
-                        });
-                    }   
-                });
-                
-            });
-            
+					if(uriBase!='ext'){
+						var $refs = $('a[href^="' + uriBase + '"]', scope),
+							path = moduleName.indexOf('http') === 0 ? moduleName : modulePath + moduleName;
+							//alert(modulePath +"-"+ moduleName);
+							console.log('Printing path');
+							console.log(path);
+						if ($refs.length) {
+							if (DEBUG) console.log('Found links for module: ' + moduleName);
+							target++;
+							// load module
+							require([path], function(module) {
+								// initialize with cached references
+								module.$refs = $refs;
+								module.moduleName = moduleName;
+								module = Module(module);
+								module.init();
+								// update manager
+								loadMgr(moduleName, module);
+							});
+						}
+					} else {
+						if($(extScopeSelector).length > 0){
+					//load the module pointed by 'ext'
+					//In the module, check the href's in div(.ext-mod-scope) against the mapping file(i.e. of form <urls_to_hover> - <zotero_record_url>)
+					//if yes, hit the zotero record, get info and populate popup
+						}
+					}
+                });                
+            });            
         });
     };
     
