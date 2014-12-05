@@ -241,57 +241,65 @@ if (typeof DEBUG === 'undefined') {
                     },
                     // load data for this resource
                     fetch: function() {
-                        // don't allow multiple reqs
-                        if (!fetching && !noFetch) {
-                            fetching = true;
-                            var res = this,
-                                parseResponse = parseData,
-                                options = $.extend({
-                                    url: res.uri,
-                                    dataType: dataType,
-                                    success: function(data) {
-                                        // save data
-                                        try {
-                                            res.data = parseResponse(data);
-                                            // potentially set type
-                                            if (!res.type) res.type = types.map(module.getType(data));
-                                        } catch(e) {
-                                            if (DEBUG) console.error('Error loading data for ' + res.uri,  data, e);
-                                        }
-                                        // invoke any handlers
-                                        readyHandlers.forEach(function(f) { 
-                                            f(res);
-                                        });
-                                        loaded = res.loaded = true;
-                                        if (DEBUG) console.log('Loaded resource', res.uri);
-                                    },
-                                    error: function() {
-                                        if (DEBUG) console.error('Resource request failed', arguments);
-                                    }
-                                }, module.ajaxOptions),
-                                // make a request using YQL as a JSONP proxy
-                                makeYqlRequest = function() {
-                                    if (DEBUG) console.log('Making YQL request for ' + res.uri);
-                                    options.url = yqlUrl(options.url);
-                                    options.dataType = 'jsonp';
-                                    parseResponse = function(data) {
-                                        data = data && (data.results && data.results[0] || data.query.results) || {};
-                                        return parseData(data);
-                                    };
-                                    $.ajax(options);
-                                };
-                            // allow CORS to fallback on YQL
-                            if (!jsonp && cors) {
-                                options.error = function() {
-                                    if (DEBUG) console.warn('CORS fail for ' + res.uri);
-                                    makeYqlRequest();
-                                };
-                            }
-                            // make the request
-                            if (DEBUG) console.log('Fetching ' + res.uri);
-                            if (jsonp || cors || module.local) $.ajax(options);
-                            else makeYqlRequest();
-                        }
+						if(this.uri.indexOf("https://") != 0) {
+							// don't allow multiple reqs
+							if (!fetching && !noFetch) {
+								fetching = true;
+								var res = this,
+									parseResponse = parseData,
+									options = $.extend({
+										url: res.uri,
+										dataType: dataType,
+										success: function(data) {
+										// console.log("Called URL:"+ res.uri + " got below response:");
+										// console.log(data);
+											// save data
+											try {
+												res.data = parseResponse(data);
+												// potentially set type
+												if (!res.type) res.type = types.map(module.getType(data));
+											} catch(e) {
+												if (DEBUG) console.error('Error loading data for ' + res.uri,  data, e);
+											}
+											// invoke any handlers
+											readyHandlers.forEach(function(f) { 
+												f(res);
+											});
+											loaded = res.loaded = true;
+											if(res.uri.indexOf("http://pleiades.stoa.org/places/") == 0){
+												console.log("Loaded data:", data.description);
+											}
+											if (DEBUG) console.log('Loaded resource', res.uri);
+										},
+										error: function() {
+											console.error('Resource request failed', arguments);
+											if (DEBUG) console.error('Resource request failed', arguments);
+										}
+									}, module.ajaxOptions),
+									// make a request using YQL as a JSONP proxy
+									makeYqlRequest = function() {
+										if (DEBUG) console.log('Making YQL request for ' + res.uri);
+										options.url = yqlUrl(options.url);
+										options.dataType = 'jsonp';
+										parseResponse = function(data) {
+											data = data && (data.results && data.results[0] || data.query.results) || {};
+											return parseData(data);
+										};
+										$.ajax(options);
+									};
+								// allow CORS to fallback on YQL
+								if (!jsonp && cors) {
+									options.error = function() {
+										if (DEBUG) console.warn('CORS fail for ' + res.uri);
+										makeYqlRequest();
+									};
+								}
+								// make the request
+								if (DEBUG) console.log('Fetching ' + res.uri);
+								if (jsonp || cors || module.local) $.ajax(options);
+								else makeYqlRequest();
+							}
+						}
                     },
                     name: function() {
                         return this.data && this.data.name || this.linkText;
@@ -313,8 +321,8 @@ if (typeof DEBUG === 'undefined') {
                     init: function() {
                         var module = this,
                             resources = module.resources = [];
-							console.log('resources');
-							console.log(resources);
+							// console.log('resources');
+							// console.log(resources);
                         // create Resource for each unique URI
                         module.resourceMap = module.$refs.toArray()
                             .reduce(function(agg, el) {
@@ -332,8 +340,16 @@ if (typeof DEBUG === 'undefined') {
                                     // add to array
                                     resources.push(agg[href]);
                                 }
+								// console.log(agg[href]);
                                 // add resource to element
-                                $ref.data('resource', agg[href]);
+                                $ref.data('resource', agg[href]);								
+								// console.log('**********Checking whats in $ref.data(resource)*************');
+								// var propValue;
+									// for(var propName in agg[href]) {
+										// propValue = agg[href][propName];
+										// console.log(propName,":",propValue);
+									// }
+								// console.log("********************************");
                                 return agg;
                             }, {});
                         // auto load if requested
@@ -346,9 +362,11 @@ if (typeof DEBUG === 'undefined') {
                         module.$refs.each(function() {
                             var $ref = $(this),
                                 res = $ref.data('resource');
+								// console.log("Add Pop up res:");
+								// console.log(res);
                             // do a jig to deal with unloaded resources
                             ui.addPopup($ref, function(callback) {
-                                res.ready(function() {
+                                res.ready(function() {	
                                     callback(module.detailView(res));
                                 });
                             });
@@ -398,9 +416,6 @@ if (typeof DEBUG === 'undefined') {
 				}
                 // Scope for external module links(zotero)
                 var extScopeSelector = '.ext-mod-scope';
-                if (!extScope && $(extScopeSelector).length){
-                    extScope = extScopeSelector;
-				}
                 // look for modules to initialize
                 $.each(registry, function(uriBase, moduleName) {
                     // look for links with this URI base
@@ -408,8 +423,8 @@ if (typeof DEBUG === 'undefined') {
 						var $refs = $('a[href^="' + uriBase + '"]', scope),
 							path = moduleName.indexOf('http') === 0 ? moduleName : modulePath + moduleName;
 							//alert(modulePath +"-"+ moduleName);
-							console.log('Printing path');
-							console.log(path);
+							// console.log('Printing path');
+							// console.log(path);
 						if ($refs.length) {
 							if (DEBUG) console.log('Found links for module: ' + moduleName);
 							target++;
