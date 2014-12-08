@@ -449,8 +449,12 @@ if (typeof DEBUG === 'undefined') {
 					if (allExtModScopes.length){
 						allExtModScopes.each(function(){
 							var className = $(this).attr('class');
+							//Get external module name from class
+							// For e.g., urlinfo from the class="urlinfo-scope"
 							var extModName = className.substring(0,className.indexOf('-'));
-							
+							//Compare the extModName with moduleName in current iteration
+							/*For e.g., the below 'if' will match for the 
+							module path urlinfo/urlinfo, that comes from registry.xml*/
 							 if(extModName === moduleName.substring(0, moduleName.indexOf('/'))){
 								console.log("External modules found!");
 								var extPath = extModulePath + moduleName;
