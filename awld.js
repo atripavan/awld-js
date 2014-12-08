@@ -71,6 +71,12 @@ if (typeof DEBUG === 'undefined') {
         
         /**
          * @type String
+         * Path for external modules, relative to baseUrl
+         */
+        extModulePath: 'extmodules/',
+        
+        /**
+         * @type String
          * Path for libraries, relative to baseUrl
          */
         libPath: 'lib/',
@@ -165,6 +171,7 @@ if (typeof DEBUG === 'undefined') {
             paths = awld.paths,
             libPath = awld.libPath,
             modulePath = awld.modulePath,
+			extModulePath = awld.extModulePath,
             onload = awld.onLoad,
             localJqueryPath = libPath + 'jquery/jquery-1.7.2.min',
             noConflict;
@@ -414,39 +421,46 @@ if (typeof DEBUG === 'undefined') {
                     scope = scopeSelector;
 					// alert(scope);
 				}
-                // Scope for external module links(zotero)
-                var extScopeSelector = '.ext-mod-scope';
+				//Get all external modules except '.awld-scope'
+				var allExtModScopes = $("div[class$='-scope']").not(scopeSelector);
                 // look for modules to initialize
                 $.each(registry, function(uriBase, moduleName) {
                     // look for links with this URI base
-					if(uriBase!='ext'){
-						var $refs = $('a[href^="' + uriBase + '"]', scope),
-							path = moduleName.indexOf('http') === 0 ? moduleName : modulePath + moduleName;
-							//alert(modulePath +"-"+ moduleName);
-							// console.log('Printing path');
-							// console.log(path);
-						if ($refs.length) {
-							if (DEBUG) console.log('Found links for module: ' + moduleName);
-							target++;
-							// load module
-							require([path], function(module) {
-								// initialize with cached references
-								module.$refs = $refs;
-								module.moduleName = moduleName;
-								module = Module(module);
-								module.init();
-								// update manager
-								loadMgr(moduleName, module);
-							});
-						}
-					} else {
-						if($(extScopeSelector).length > 0){
-					//load the module pointed by 'ext'
-					//In the module, check the href's in div(.ext-mod-scope) against the mapping file(i.e. of form <urls_to_hover> - <zotero_record_url>)
-					//if yes, hit the zotero record, get info and populate popup
-						}
+					var $refs = $('a[href^="' + uriBase + '"]', scope),
+						path = moduleName.indexOf('http') === 0 ? moduleName : modulePath + moduleName;
+						//alert(modulePath +"-"+ moduleName);
+						console.log('module name:' + moduleName);
+						console.log('Path:' + path);
+						// console.log(path);
+					if ($refs.length) {
+						if (DEBUG) console.log('Found links for module: ' + moduleName);
+						target++;
+						// load module
+						require([path], function(module) {
+							// initialize with cached references
+							module.$refs = $refs;
+							module.moduleName = moduleName;
+							module = Module(module);
+							module.init();
+							// update manager
+							loadMgr(moduleName, module);
+						});
 					}
-                });                
+					if (allExtModScopes.length){
+						allExtModScopes.each(function(){
+							var className = $(this).attr('class');
+							var extModName = className.substring(0,className.indexOf('-'));
+							
+							 if(extModName === moduleName.substring(0, moduleName.indexOf('/'))){
+								console.log("External modules found!");
+								var extPath = extModulePath + moduleName;
+								console.log("extPath:"+extPath)
+								/* send div element to the respective module (.urlinfo-scope) 
+									where it can do the required processing */
+							 }
+						});
+					}
+                }); 
             });            
         });
     };

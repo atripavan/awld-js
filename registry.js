@@ -22,5 +22,5 @@ define('registry', {
     'http://www.smb.museum/ikmk/object.php': 'www.smb.museum/www.smb.museum',
     'http://www.sudoc.fr/': 'www.sudoc.fr/www.sudoc.fr',
     'http://www.worldcat.org/oclc': 'worldcat/oclc',
-	'ext':'extmodule/urlinfo',
+	'ext':'urlinfo/urlinfo',
 });
