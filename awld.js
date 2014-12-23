@@ -4,7 +4,7 @@
  * @author Nick Rabinowitz
  * @author Sebastian Heath
  */
-
+var convProt = document.URL.indexOf('https')===0;
 // removed in production by uglify
 if (typeof DEBUG === 'undefined') {
     DEBUG = !(window.console === 'undefined');
@@ -20,6 +20,14 @@ if (typeof DEBUG === 'undefined') {
 
 (function(window) {
     if (DEBUG) console.log('AWLD.js loaded');
+		
+	function convertToHttps(uri){
+		if(!(uri.indexOf("https://")==0)){
+			var temp = uri.substring(7, uri.length);
+			console.log("Converted URL:"+"https://"+temp);
+			return "https://"+temp;
+		}
+	}
         
     // utility: simple object extend
     function extend(obj, settings) {
@@ -248,64 +256,68 @@ if (typeof DEBUG === 'undefined') {
                     },
                     // load data for this resource
                     fetch: function() {
-						if(this.uri.indexOf("https://") != 0) {
-							// don't allow multiple reqs
-							if (!fetching && !noFetch) {
-								fetching = true;
-								var res = this,
-									parseResponse = parseData,
-									options = $.extend({
-										url: res.uri,
-										dataType: dataType,
-										success: function(data) {
-										// console.log("Called URL:"+ res.uri + " got below response:");
-										// console.log(data);
-											// save data
-											try {
-												res.data = parseResponse(data);
-												// potentially set type
-												if (!res.type) res.type = types.map(module.getType(data));
-											} catch(e) {
-												if (DEBUG) console.error('Error loading data for ' + res.uri,  data, e);
-											}
-											// invoke any handlers
-											readyHandlers.forEach(function(f) { 
-												f(res);
-											});
-											loaded = res.loaded = true;
-											if(res.uri.indexOf("http://pleiades.stoa.org/places/") == 0){
-												console.log("Loaded data:", data.description);
-											}
-											if (DEBUG) console.log('Loaded resource', res.uri);
-										},
-										error: function() {
-											console.error('Resource request failed', arguments);
-											if (DEBUG) console.error('Resource request failed', arguments);
-										}
-									}, module.ajaxOptions),
-									// make a request using YQL as a JSONP proxy
-									makeYqlRequest = function() {
-										if (DEBUG) console.log('Making YQL request for ' + res.uri);
-										options.url = yqlUrl(options.url);
-										options.dataType = 'jsonp';
-										parseResponse = function(data) {
-											data = data && (data.results && data.results[0] || data.query.results) || {};
-											return parseData(data);
-										};
-										$.ajax(options);
-									};
-								// allow CORS to fallback on YQL
-								if (!jsonp && cors) {
-									options.error = function() {
-										if (DEBUG) console.warn('CORS fail for ' + res.uri);
-										makeYqlRequest();
-									};
-								}
-								// make the request
-								if (DEBUG) console.log('Fetching ' + res.uri);
-								if (jsonp || cors || module.local) $.ajax(options);
-								else makeYqlRequest();
+						// don't allow multiple reqs
+						if (!fetching && !noFetch) {
+							if(convProt){
+								res.uri = convertToHttps(res.uri);
+								console.log("Converted protocol:"+res.uri);
 							}
+							fetching = true;
+							var res = this,
+								parseResponse = parseData,
+								options = $.extend({
+									url: res.uri,
+									dataType: dataType,
+									success: function(data) {
+									// console.log("Called URL:"+ res.uri + " got below response:");
+									// console.log(data);
+										// save data
+										try {
+											res.data = parseResponse(data);
+											// potentially set type
+											if (!res.type) res.type = types.map(module.getType(data));
+										} catch(e) {
+											if (DEBUG) console.error('Error loading data for ' + res.uri,  data, e);
+										}
+										// invoke any handlers
+										readyHandlers.forEach(function(f) { 
+											f(res);
+										});
+										loaded = res.loaded = true;
+										if (DEBUG) console.log('Loaded resource', res.uri);
+									},
+									error: function() {
+										console.error('Resource request failed', arguments);
+										if (DEBUG) console.error('Resource request failed', arguments);
+									}
+								}, module.ajaxOptions),
+								// make a request using YQL as a JSONP proxy
+								makeYqlRequest = function() {
+									if (DEBUG) console.log('Making YQL request for ' + options.url);
+									// console.log('Making YQL request for ' + options.url);
+									if(convProt){
+										options.url=convertToHttps(options.url);
+										console.log("Converting url to https for YQL:"+options.url);
+									}
+									options.url = yqlUrl(options.url);
+									options.dataType = 'jsonp';
+									parseResponse = function(data) {
+										data = data && (data.results && data.results[0] || data.query.results) || {};
+										return parseData(data);
+									};
+									$.ajax(options);
+								};
+							// allow CORS to fallback on YQL
+							if (!jsonp && cors) {
+								options.error = function() {
+									if (DEBUG) console.warn('CORS fail for ' + res.uri);
+									makeYqlRequest();
+								};
+							}
+							// make the request
+							if (DEBUG) console.log('Fetching ' + res.uri);
+							if (jsonp || cors || module.local) $.ajax(options);
+							else makeYqlRequest();
 						}
                     },
                     name: function() {
