@@ -260,7 +260,7 @@ if (typeof DEBUG === 'undefined') {
 						if (!fetching && !noFetch) {
 							if(convProt){
 								this.uri = convertToHttps(this.uri);
-								console.log("Converted protocol:"+res.uri);
+								console.log("Converted protocol:"+this.uri);
 							}
 							fetching = true;
 							var res = this,
