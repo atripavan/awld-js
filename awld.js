@@ -258,10 +258,10 @@ if (typeof DEBUG === 'undefined') {
                     fetch: function() {
 						// don't allow multiple reqs
 						if (!fetching && !noFetch) {
-							if(convProt){
-								this.uri = convertToHttps(this.uri);
-								console.log("Converted protocol:"+this.uri);
-							}
+							// if(convProt){
+								// this.uri = convertToHttps(this.uri);
+								// console.log("Converted protocol:"+this.uri);
+							// }
 							fetching = true;
 							var res = this,
 								parseResponse = parseData,
@@ -295,10 +295,10 @@ if (typeof DEBUG === 'undefined') {
 								makeYqlRequest = function() {
 									if (DEBUG) console.log('Making YQL request for ' + options.url);
 									// console.log('Making YQL request for ' + options.url);
-									if(convProt){
-										options.url=convertToHttps(options.url);
-										console.log("Converting url to https for YQL:"+options.url);
-									}
+									// if(convProt){
+										// options.url=convertToHttps(options.url);
+										// console.log("Converting url to https for YQL:"+options.url);
+									// }
 									options.url = yqlUrl(options.url);
 									options.dataType = 'jsonp';
 									parseResponse = function(data) {
