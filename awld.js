@@ -259,7 +259,7 @@ if (typeof DEBUG === 'undefined') {
 						// don't allow multiple reqs
 						if (!fetching && !noFetch) {
 							if(convProt){
-								res.uri = convertToHttps(res.uri);
+								this.uri = convertToHttps(this.uri);
 								console.log("Converted protocol:"+res.uri);
 							}
 							fetching = true;
