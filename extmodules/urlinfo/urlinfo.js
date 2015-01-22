@@ -1,34 +1,50 @@
 // Module: Zotero records
 
-define(function() {
+define(['jquery'], function($) {
+	var urlKey;
     return {
         name: 'Zotero Record',
         type: 'record',
         toDataUri: function(uri) {
-			// alert(uri);
-            return uri + '/json';
+			urlKey = uri;			
+            return uri;
         },
-        corsEnabled: true,
+        // corsEnabled: true,
         // add name to data
-        parseData: function(data) {
+        parseData: function(htmldata) {	
+			var xmlhttp, popupTxt="";
+			console.log("url key:"+urlKey);
+			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			  xmlhttp=new XMLHttpRequest();
+			}
+			else {// code for IE6, IE5
+			  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange=function() {
+				if (xmlhttp.readyState==4) {
+					console.log("in xmlhttp:"+urlKey);
+					jsondata = JSON.parse(xmlhttp.responseText);
+					 $.each(jsondata['data'], function(i, item){
+						Object.keys(item).forEach(function(k){
+							// console.log("k:"+k);
+							if(k === urlKey){									
+								$.each(item[urlKey], function(i, item) {						
+									popupTxt = '<b>Title:</b> '+item['title']+'<br/>'+'<b>Zotero Item Key:</b> '+item['key']+
+										'<br/>'+'<b>Original Blog URL:</b> '+
+											'<a href="'+item['blogurl']+'">'+item['blogurl']+'</a>';
+								});
+							}
+						});
+					});
+				}
+			}
 
-            data.name = data.title;
-			// alert(data.title);
-            data.latlon = data.reprPoint && data.reprPoint.reverse();
-			// alert('inside zotero function'+data.latlon);
-			
-			//var allItems = new Array();
-			/*$.getJSON("http://atripavan.github.io/awld-js/urltozot.json",
-				 function(data){
-					 $.each(data.items, function(item){
-						 //allItems.push(item);
-						 console.log(item);
-						 alert(item["'"+data.title+"'"]);
-					 });
-				 });*/			
-			
-            data.description = 'testing zotero';
-			return data;
+			xmlhttp.open("GET","extmodules/urlinfo/urltozot.json",false);
+			xmlhttp.send();
+			console.log("Popup text");
+			console.log(popupTxt);
+            htmldata.description = popupTxt;
+			return htmldata;
         }
     };
 });

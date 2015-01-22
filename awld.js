@@ -340,8 +340,6 @@ if (typeof DEBUG === 'undefined') {
                     init: function() {
                         var module = this,
                             resources = module.resources = [];
-							// console.log('resources');
-							// console.log(resources);
                         // create Resource for each unique URI
                         module.resourceMap = module.$refs.toArray()
                             .reduce(function(agg, el) {
@@ -359,7 +357,6 @@ if (typeof DEBUG === 'undefined') {
                                     // add to array
                                     resources.push(agg[href]);
                                 }
-								// console.log(agg[href]);
                                 // add resource to element
                                 $ref.data('resource', agg[href]);								
 								// console.log('**********Checking whats in $ref.data(resource)*************');
@@ -470,9 +467,23 @@ if (typeof DEBUG === 'undefined') {
 							 if(extModName === moduleName.substring(0, moduleName.indexOf('/'))){
 								console.log("External modules found!");
 								var extPath = extModulePath + moduleName;
-								console.log("extPath:"+extPath)
-								/* send div element to the respective module (.urlinfo-scope) 
-									where it can do the required processing */
+								var $refs = $('a[href]', '.'+className),
+									path = extPath;
+								console.log("extPath:"+extPath);
+								if ($refs.length) {
+									if (DEBUG) console.log('Found links for Zotero module: ' + moduleName);
+									// load module
+									require([path], function(module) {
+										// initialize with cached references
+										module.$refs = $refs;
+										module.moduleName = moduleName;
+										module.modPath = extPath;
+										module = Module(module);
+										module.init();
+										// update manager
+										loadMgr(moduleName, module);
+									});
+								}
 							 }
 						});
 					}
