@@ -241,13 +241,9 @@ if (typeof DEBUG === 'undefined') {
                     fetching = false,
                     loaded = false,
                     yqlUrl = function(uri) {
-						var protPref = 'http';
-						if(convProt){
-							protPref = 'https';
-						}
-						return protPref + '://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20' + dataType +
-							'%20where%20url%3D%22' + uri + '%22&format=' + dataType +
-							'&diagnostics=false&callback=?';
+                        return 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20' + dataType +
+                            '%20where%20url%3D%22' + uri + '%22&format=' + dataType +
+                            '&diagnostics=false&callback=?';
                     };
                 return $.extend({
                     // do something when data is loaded
@@ -263,8 +259,8 @@ if (typeof DEBUG === 'undefined') {
 						// don't allow multiple reqs
 						if (!fetching && !noFetch) {
 							if(convProt){
-								this.uri = convertToHttps(this.uri);
-								console.log("Converted protocol:"+this.uri);
+								res.uri = convertToHttps(res.uri);
+								console.log("Converted protocol:"+res.uri);
 							}
 							fetching = true;
 							var res = this,
@@ -344,8 +340,6 @@ if (typeof DEBUG === 'undefined') {
                     init: function() {
                         var module = this,
                             resources = module.resources = [];
-							// console.log('resources');
-							// console.log(resources);
                         // create Resource for each unique URI
                         module.resourceMap = module.$refs.toArray()
                             .reduce(function(agg, el) {
@@ -363,7 +357,6 @@ if (typeof DEBUG === 'undefined') {
                                     // add to array
                                     resources.push(agg[href]);
                                 }
-								// console.log(agg[href]);
                                 // add resource to element
                                 $ref.data('resource', agg[href]);								
 								// console.log('**********Checking whats in $ref.data(resource)*************');
@@ -474,9 +467,23 @@ if (typeof DEBUG === 'undefined') {
 							 if(extModName === moduleName.substring(0, moduleName.indexOf('/'))){
 								console.log("External modules found!");
 								var extPath = extModulePath + moduleName;
-								console.log("extPath:"+extPath)
-								/* send div element to the respective module (.urlinfo-scope) 
-									where it can do the required processing */
+								var $refs = $('a[href]', '.'+className),
+									path = extPath;
+								console.log("extPath:"+extPath);
+								if ($refs.length) {
+									if (DEBUG) console.log('Found links for Zotero module: ' + moduleName);
+									// load module
+									require([path], function(module) {
+										// initialize with cached references
+										module.$refs = $refs;
+										module.moduleName = moduleName;
+										module.modPath = extPath;
+										module = Module(module);
+										module.init();
+										// update manager
+										loadMgr(moduleName, module);
+									});
+								}
 							 }
 						});
 					}
