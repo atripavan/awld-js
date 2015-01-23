@@ -12,18 +12,15 @@ define(['jquery'], function($) {
         // corsEnabled: true,
         // add name to data
         parseData: function(htmldata) {	
-			var xmlhttp, popupTxt="";
+			var popupTxt="";
 			console.log("url key:"+urlKey);
-			if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-			  xmlhttp=new XMLHttpRequest();
-			}
-			else {// code for IE6, IE5
-			  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function() {
-				if (xmlhttp.readyState==4) {
+			$.ajax({
+				async: false,
+				dataType: "json",
+				url: "extmodules/urlinfo/urltozot.json",
+				success: function(jsondata){
 					console.log("in xmlhttp:"+urlKey);
-					jsondata = JSON.parse(xmlhttp.responseText);
+					// jsondata = JSON.parse(responseText);
 					 $.each(jsondata['data'], function(i, item){
 						Object.keys(item).forEach(function(k){
 							// console.log("k:"+k);
@@ -37,10 +34,8 @@ define(['jquery'], function($) {
 						});
 					});
 				}
-			}
+			});
 
-			xmlhttp.open("GET","extmodules/urlinfo/urltozot.json",false);
-			xmlhttp.send();
 			console.log("Popup text");
 			console.log(popupTxt);
             htmldata.description = popupTxt;
