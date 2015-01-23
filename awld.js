@@ -241,7 +241,10 @@ if (typeof DEBUG === 'undefined') {
                     fetching = false,
                     loaded = false,
                     yqlUrl = function(uri) {
-                        return 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20' + dataType +
+						var protPref = 'http';
+						if(convProt)
+							protPref = 'https';
+                        return protPref + '://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20' + dataType +
                             '%20where%20url%3D%22' + uri + '%22&format=' + dataType +
                             '&diagnostics=false&callback=?';
                     };
